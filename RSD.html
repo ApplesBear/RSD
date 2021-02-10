@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RSD calculator</title>
+    <meta charset="UTF-8">
+    <style>
+      * {
+        margin: 0;
+        box-sizing: border-box;
+        font-family: sans-serif;
+        font-size: large;
+      }
+      input {
+          border: none;
+          outline: none;
+          width: 200px;
+      }
+      td {
+          border: 1px solid black;
+          border-collapse: collapse;
+          height: 25px;
+      }
+      table {
+          margin: 50px auto;
+      }
+      #button {
+          border: none;
+          padding: 30px;
+          text-align: center;
+      }
+      th {
+          text-align: right;
+      }
+      #clear {
+          margin: 0 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <th>
+          <button id="clear">X</button>
+        </th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><input type="text"></td>
+      </tr>
+      <tr>
+        <th>Mean</th>
+        <td id="mean"></td>
+      </tr>
+      <tr>
+        <th>RSD, %</th>
+        <td id="RSD"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td id="button">
+          <button id="submit">Submit</button>
+        </td>
+      </tr>
+    </table>
+  </body>
+  <script>
+    let inputes = document.querySelectorAll("input");
+    let submit = document.querySelector("#submit");
+    let clear = document.querySelector("#clear");
+    let mean = document.querySelector("#mean");
+    let RSD = document.querySelector("#RSD");
+    let meanResult;
+    let RSDResult;
+    let meanSD;
+    let values = [];
+    let SD = [];
+
+    submit.addEventListener("click", function() {
+      getValues();
+      getRSD();
+    })
+
+    clear.addEventListener("click", function() {
+      deleteValues();
+    })
+   
+    function getValues() {
+      values.length = 0;
+      for (let i = 0; i < inputes.length; i++) {
+        let v = inputes[i].value;
+        if(v !== "") {
+          values.push(+v);
+        }
+      }
+    }
+
+    function getMean() {
+      let summa = 0;
+      for (let i = 0; i < values.length; i++) {
+        summa += values[i];
+      }
+      meanResult = summa / values.length;
+      mean.innerHTML = meanResult;
+    }
+
+    function deleteValues() {
+      for (let i = 0; i < inputes.length; i++) {
+        inputes[i].value = "";
+      }
+      mean.innerHTML = "";
+      RSD.innerHTML = "";
+    }
+
+    function getSD() {
+      SD.length = 0;
+      for (let i = 0; i < values.length; i++) {
+        sd = values[i] - meanResult;
+        SD.push(sd * sd);
+      }
+    }
+
+    function getMeanSD() {
+      getSD();
+      let summaSD = 0;
+      for (let i = 0; i < SD.length; i++) {
+        summaSD += SD[i];
+      }
+      meanSD = Math.sqrt(summaSD / SD.length);
+    }
+
+    function getRSD() {
+      getMean();
+      getMeanSD();
+      RSDResult = meanSD * 100 / meanResult;
+      RSD.innerHTML = RSDResult;
+    }
+    
+  </script>
+</html>
